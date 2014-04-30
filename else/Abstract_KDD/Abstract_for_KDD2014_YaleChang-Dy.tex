@@ -1,0 +1,16 @@
+\documentclass{article}
+
+% Doc info
+\title{Integrating Multiple Heterogeneous Data Sources for Discovering Alternative Clustering Solutions}
+\author{Yale Chang and Jennifer G. Dy}
+
+\begin{document}
+\maketitle
+\section{Abstract}
+Real-world data is often multi-faceted by nature; i.e., given the same data, it can be interpreted and clustered in multiple ways.  However, traditional clustering algorithms only find a single clustering solution.  In many cases, this solution may not be what the analyst is interested in.  Here, we provide a clustering method that enables the discovery of alternative clustering solutions from previously discovered ones.  In addition, many real-world datasets are collected from multiple heterogeneous sources.  Existing work on exploring alternative clustering solutions can only use a single source as input.  Although one can simply concatenate the sources and use one similarity measure, usually these sources are represented by different data types and as such should be more appropriately represented by different similarity measures.  In this paper, we introduce a novel approach that finds alternative clustering solutions by integrating information from multiple heterogeneous data sources by learning from multiple kernel similarity graphs.  Our formulation enables us to automatically learn the weights of a convex linear combination of the similarity kernels for each source, while able to simultaneously discover clustering solutions that are of good quality and that are novel compared to previous clusterings.  
+%
+%We utilize a nonnegative matrix factorization formulation of spectral clustering to measure cluster quality and a nonparametric Hilbert-Schmidtindependence criterion for measuring novelty.
+%Yale, is this what you did?  Feel free to keep or remove the commented sentence above.
+Experimental results on synthetic and real data show the effectiveness of our algorithm. 
+
+\end{document}
