@@ -66,7 +66,7 @@ if flag_normalization == True:
     aff_pca = aff_pca/la.norm(aff_pca)
 
 # Centering kernel matrix
-flag_centering = False
+flag_centering = True
 H = np.eye(img.shape[0])-1./img.shape[0]*np.ones((img.shape[0],img.shape[0]))
 if flag_centering == True:
     aff_raw = H.dot(aff_raw).dot(H)
@@ -99,9 +99,10 @@ for i in range(n_instances):
 
 ################################ Parameter Settings ##########################
 affs = [aff_raw,aff_pca,aff_lbp,aff_hog,aff_gabor,aff_fft]
-v_lambda_range = np.arange(0,1.,0.1)
+#affs = [aff_gabor,aff_fft]
+v_lambda_range = np.arange(0,0.2,0.02)
 # Upper bound for 1-norm of beta
-mu = 1.
+mu = 100.
 dim_q = 4
 tol = 1e-6
 n_iter_max = 200

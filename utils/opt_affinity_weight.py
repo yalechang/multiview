@@ -93,6 +93,10 @@ def opt_affinity_weight(affs,Q,Y,mu,v_lambda=100.,dim_q=4,tol=1e-6,\
         eig_vec = eig_vec[:,idx]
         U = eig_vec[:,0:dim_q]
         
+        # OR Find U by singular value decomposition
+        #tp_U,tp_S,tp_V = la.svd(2*aff-aff_Y)
+        #U = tp_U[:,0:dim_q].dot(np.diag(tp_S[0:dim_q]))
+
         beta_old = beta
         # Optimize beta by QP
         gamma = np.zeros((n_sources,1))
