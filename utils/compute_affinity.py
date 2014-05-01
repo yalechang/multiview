@@ -34,8 +34,8 @@ def compute_affinity(data,flag_sigma='local',sigma=100.,nn=7):
         # Take the median value as scale parameter
         sigma = np.median(dis_data)**2
         aff_data = rbf_kernel(data,data,gamma=1./sigma)
-        tmp = np.diag(1./np.sqrt(np.sum(aff_data,1)))
-        aff_data = tmp.dot(aff_data).dot(tmp)
+        #tmp = np.diag(1./np.sqrt(np.sum(aff_data,1)))
+        #aff_data = tmp.dot(aff_data).dot(tmp)
 
     elif flag_sigma == 'manual':
         aff_data = rbf_kernel(data,data,gamma=1./sigma)

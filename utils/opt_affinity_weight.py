@@ -95,7 +95,7 @@ def opt_affinity_weight(affs,Q,Y,v_lambda=100.,dim_q=4,tol=1e-6,\
         # Optimize beta by QP
         gamma = np.zeros((n_sources,1))
         for i in range(n_sources):
-            gamma[i] = np.trace(affs[i].dot(U))
+            gamma[i] = np.trace(affs[i].dot(U).dot(U.T))
         gamma = matrix(gamma)
         G = matrix(-np.identity(n_sources))
         h = matrix(np.zeros((n_sources,1)))

@@ -10,12 +10,21 @@ from sklearn.metrics import normalized_mutual_info_score as nmi
 import numpy.linalg as la
 import pickle
 from python.multiview.utils.compute_affinity import compute_affinity
+from sys import platform as _platform
 
 # Directory of face image
-basepath = '/Users/changyale/dataset/faces_4/'
+if _platform == 'darwin':
+    basepath = '/Users/changyale/dataset/faces_4/'
+elif _platform == 'linux2' or _platform == 'linux':
+    basepath = '/home/changyale/dataset/faces_4/'
+else:
+    basepath = 'basepath Error!'
 
+# In CMU faces dataset, there're 20 people, each one has 32 images consisting
+# of 4 poses, 4 expressions and 2 eye status
 n_img = 32*20
 
+# names of 20 people
 identity = os.walk(basepath).next()[1]
 
 pose = ['left','right','straight','up']

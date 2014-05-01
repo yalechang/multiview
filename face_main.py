@@ -54,37 +54,53 @@ sigma_gabor, aff_gabor = compute_affinity(feat_gabor,flag_sigma=flag_sigma)
 sigma_lbp, aff_lbp = compute_affinity(feat_lbp,flag_sigma=flag_sigma)
 sigma_hog, aff_hog = compute_affinity(feat_hog,flag_sigma=flag_sigma)
 sigma_pca, aff_pca = compute_affinity(feat_pca,flag_sigma=flag_sigma)
-print "kernel computation finished"
 
-"""
+# Normalization of matrix using Frobenius norm
+flag_normalization = False
+if flag_normalization == True:
+    aff_raw = aff_raw/la.norm(aff_raw)
+    aff_fft = aff_fft/la.norm(aff_fft)
+    aff_gabor = aff_gabor/la.norm(aff_gabor)
+    aff_lbp = aff_lbp/la.norm(aff_lbp)
+    aff_hog = aff_hog/la.norm(aff_hog)
+    aff_pca = aff_pca/la.norm(aff_pca)
+
+# Centering kernel matrix
+flag_centering = True
+H = np.eye(img.shape[0])-1./img.shape[0]*np.ones((img.shape[0],img.shape[0]))
+if flag_centering == True:
+    aff_raw = H.dot(aff_raw).dot(H)
+    aff_fft = H.dot(aff_fft).dot(H)
+    aff_gabor = H.dot(aff_gabor).dot(H)
+    aff_lbp = H.dot(aff_lbp).dot(H)
+    aff_hog = H.dot(aff_hog).dot(H)
+    aff_pca = H.dot(aff_pca).dot(H)
+
 # Spectral Clustering using FFT and Gabor
 n_identity = 20
-label_pred_fft = spectral_clustering(aff_fft,n_clusters=n_identity)
-label_pred_gabor = spectral_clustering(aff_gabor,n_clusters=n_identity)
+#label_pred_fft = spectral_clustering(aff_fft,n_clusters=n_identity)
+#label_pred_gabor = spectral_clustering(aff_gabor,n_clusters=n_identity)
+#nmi_fft_identity = nmi(label_pred_fft,img_identity)
+#nmi_gabor_identity = nmi(label_pred_gabor,img_identity)
+#print "nmi_fft_identity: ", nmi_fft_identity
+#print "nmi_gabor_identity: ",nmi_gabor_identity
 
-nmi_fft_identity = nmi(label_pred_fft,img_identity)
-nmi_gabor_identity = nmi(label_pred_gabor,img_identity)
-print "nmi_fft_identity: ", nmi_fft_identity
-print "nmi_gabor_identity: ",nmi_gabor_identity
-
-for alpha in np.arange(0.1,1.0,0.1):
-    aff_add = alpha*aff_fft+(1-alpha)*aff_gabor
-    label_pred_add = spectral_clustering(aff_add,n_clusters=n_identity)
-    nmi_add_identity = nmi(label_pred_add,img_identity)
-    print (alpha,nmi_add_identity)
-"""
+#for alpha in np.arange(0.1,1.0,0.1):
+#    aff_add = alpha*aff_fft+(1-alpha)*aff_gabor
+#    label_pred_add = spectral_clustering(aff_add,n_clusters=n_identity)
+#    nmi_add_identity = nmi(label_pred_add,img_identity)
+#    print (alpha,nmi_add_identity)
 
 # Existing solution: identity
 n_instances = img.shape[0]
-Y = np.zeros((n_instances,20))
+Y = np.zeros((n_instances,n_identity))
 for i in range(n_instances):
     Y[i,img_identity[i]] = 1
-    #Y[i,img_pose[i]+20] = 1
 
-# Parameter Settings
+################################ Parameter Settings ##########################
 # affs = [aff_raw,aff_pca,aff_fft,aff_gabor]
-affs = [aff_pca,aff_fft]
-v_lambda_range = np.arange(0,1.,0.05)
+affs = [aff_fft,aff_gabor]
+v_lambda_range = np.arange(0,20.,2.)
 dim_q = 4
 tol = 1e-6
 n_iter_max = 200
@@ -94,9 +110,9 @@ nmi_pose = []
 nmi_identity = []
 beta_vec = []
 res_vec = []
-inertia_vec = []
 mse_vec = []
-# Silhouette Score
+# Metric from running K-Means
+inertia_vec = []
 score_vec = []
 
 # Show Quadratic term matrix
@@ -117,8 +133,6 @@ for v_lambda_idx in range(len(v_lambda_range)):
 
     if flag == True:
         print "Optimization is successful",v_lambda_idx
-        #print "weights: ",beta
-        #print "residue: ",res
         beta_vec.append(np.array(beta)[0])
         res_vec.append(res)
         mse_vec.append(mse)
@@ -144,7 +158,6 @@ for v_lambda_idx in range(len(v_lambda_range)):
     nmi_identity.append(nmi(label_u,img_identity))
     nmi_pose.append(nmi(label_u,img_pose))
 
-    """
     n_show = n_pose
     # Show mean image
     img_avg = np.zeros((n_show,img.shape[1],img.shape[2]))
@@ -155,16 +168,15 @@ for v_lambda_idx in range(len(v_lambda_range)):
 
     for i in range(n_show):
         img_avg[i] = img_avg[i]/cnt_avg[i]
-        plt.imshow(img_avg[i],cmap=cm.Greys_r)
-        plt.show()
-    """
+        #plt.imshow(img_avg[i],cmap=cm.Greys_r)
+        #plt.show()
 
 beta_vec = np.array(beta_vec)
 
 # Plot the result
-plt.figure(0)
-plt.plot(nmi_pose,mse_vec)
-plt.show()
+#plt.figure(0)
+#plt.plot(nmi_pose,mse_vec)
+#plt.show()
 
 #plt.figure(1)
 #plt.plot(v_lambda_range,inertia_vec)
@@ -175,5 +187,3 @@ plt.show()
 #plt.plot(v_lambda_range,mse_vec)
 #plt.xlabel("lambda")
 #plt.ylabel("MSe")
-
-

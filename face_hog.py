@@ -27,6 +27,7 @@ for i in range(img.shape[0]):
     #print i
 
 feat_hog = np.array(feat_hog)
+print feat_hog.shape
 
 # PCA on HoG features
 pca = PCA(n_components=40)

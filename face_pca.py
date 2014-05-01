@@ -1,3 +1,6 @@
+""" This script extracts PCA features from CMU face dataset
+"""
+
 import numpy as np
 import pickle
 from sklearn.preprocessing import scale
@@ -27,8 +30,6 @@ pca = PCA(n_components=40)
 feat_pca = pca.fit_transform(img.reshape(img.shape[0],\
     img.shape[1]*img.shape[2]))
 print "Variance Ratio: ",sum(pca.explained_variance_ratio_)
-
-#feat_pca = scale(feat_pca)
 
 # save PCA image
 file_pkl = open("face_pca.pkl","wb")

@@ -21,18 +21,18 @@ file_pkl.close()
 # Extract local binary pattern from images
 feat_lbp = []
 for i in range(img.shape[0]):
-    #tmp = feature.local_binary_pattern(img[i],8,1,method='uniform')
-    #feat_lbp.append(np.double(np.histogram(tmp,bins=range(10))[0]))
-    feat_lbp.append(mahotas.features.lbp(img[i],1,8))
+    tmp = feature.local_binary_pattern(img[i],8,1,method='uniform')
+    feat_lbp.append(np.double(np.histogram(tmp,bins=range(10),normed=True)[0]))
+    #feat_lbp.append(mahotas.features.lbp(img[i],1,8))
 feat_lbp = scale(np.array(feat_lbp))
 
 # PCA on LBP features
-pca = PCA(n_components=20)
-feat_lbp = pca.fit_transform(feat_lbp)
-print "Variance Ratio: ",sum(pca.explained_variance_ratio_)
+#pca = PCA(n_components=20)
+#feat_lbp = pca.fit_transform(feat_lbp)
+#print "Variance Ratio: ",sum(pca.explained_variance_ratio_)
 
 # Normalization of features
-feat_lbp = scale(feat_lbp)
+#feat_lbp = scale(feat_lbp)
 
 # Save LBP features
 file_pkl = open("face_lbp.pkl","wb")
@@ -52,5 +52,4 @@ print "NMI with identity: ",nmi_identity
 label_pred_pose = spectral_clustering(aff_lbp,n_clusters=4)
 nmi_pose = nmi(label_pred_pose,img_pose)
 print "NMI with pose: ",nmi_pose
-
 

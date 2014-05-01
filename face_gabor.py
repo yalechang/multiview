@@ -39,7 +39,7 @@ for i in range(img.shape[0]):
 #feat_gabor = pca.fit_transform(feat_gabor)
 #print "Variance Ratio: ",sum(pca.explained_variance_ratio_)
 
-feat_gabor = scale(feat_gabor)
+#feat_gabor = scale(feat_gabor)
 # Save Gabor Features
 file_pkl = open("face_gabor.pkl","wb")
 pickle.dump(feat_gabor,file_pkl)

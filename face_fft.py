@@ -26,13 +26,14 @@ for i in range(img.shape[0]):
 
 img_fft = img_fft.reshape(img_fft.shape[0],img_fft.shape[1]*img_fft.shape[2])
 
+print img_fft.shape
 # PCA on FFT features
 pca = PCA(n_components=14)
 feat_fft = pca.fit_transform(img_fft)
 print "Variance Ratio: ",sum(pca.explained_variance_ratio_)
 
 # Normalization of features
-feat_fft = scale(feat_fft)
+#feat_fft = scale(feat_fft)
 
 # save FFT data
 file_pkl = open("face_fft.pkl","wb")
