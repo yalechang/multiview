@@ -4,7 +4,7 @@ from cvxopt import solvers
 import numpy.linalg as la
 
 
-def opt_affinity_weight(affs,Q,Y,v_lambda=100.,dim_q=4,tol=1e-6,\
+def opt_affinity_weight(affs,Q,Y,mu,v_lambda=100.,dim_q=4,tol=1e-6,\
         n_iter_max=200):
     """ This function optimize the global residue w.r.t the weights of all the
     kernels and the common low dimensional embedding.
@@ -21,6 +21,8 @@ def opt_affinity_weight(affs,Q,Y,v_lambda=100.,dim_q=4,tol=1e-6,\
     Y: array, shape(n_instances,n_clusters_ex)
         cluster assignments of existing clustering solution. There's only one
         non-zero element in each row
+    
+    mu: upperbound for 1-norm of beta
 
     v_lambda: float
         non-negative parameter controlling the tradeoff between clustering
@@ -97,14 +99,17 @@ def opt_affinity_weight(affs,Q,Y,v_lambda=100.,dim_q=4,tol=1e-6,\
         for i in range(n_sources):
             gamma[i] = np.trace(affs[i].dot(U).dot(U.T))
         gamma = matrix(gamma)
-        G = matrix(-np.identity(n_sources))
-        h = matrix(np.zeros((n_sources,1)))
-        A = matrix(np.ones((1,n_sources)))
-        b = matrix(1.0)
+       
+        G = matrix(np.vstack((-np.identity(n_sources),np.ones((1,n_sources)))))
+        h = matrix(np.vstack((np.zeros((n_sources,1)),mu*np.ones((1,1)))))
+        #G = matrix(-np.identity(n_sources))
+        #h = matrix(np.zeros((n_sources,1)))
+        #A = matrix(np.ones((1,n_sources)))
+        #b = matrix(1.0)
         
         # Supress the display of output
         solvers.options['show_progress'] = False
-        opt_res = solvers.qp(2*Q,-2*gamma,G,h,A,b)
+        opt_res = solvers.qp(2*Q,-2*gamma,G,h)
         beta = opt_res['x'].T
         
         aff_old = np.zeros((n_instances,n_instances))

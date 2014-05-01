@@ -66,7 +66,7 @@ if flag_normalization == True:
     aff_pca = aff_pca/la.norm(aff_pca)
 
 # Centering kernel matrix
-flag_centering = True
+flag_centering = False
 H = np.eye(img.shape[0])-1./img.shape[0]*np.ones((img.shape[0],img.shape[0]))
 if flag_centering == True:
     aff_raw = H.dot(aff_raw).dot(H)
@@ -98,12 +98,14 @@ for i in range(n_instances):
     Y[i,img_identity[i]] = 1
 
 ################################ Parameter Settings ##########################
-# affs = [aff_raw,aff_pca,aff_fft,aff_gabor]
-affs = [aff_fft,aff_gabor]
-v_lambda_range = np.arange(0,20.,2.)
+affs = [aff_raw,aff_pca,aff_lbp,aff_hog,aff_gabor,aff_fft]
+v_lambda_range = np.arange(0,1.,0.1)
+# Upper bound for 1-norm of beta
+mu = 1.
 dim_q = 4
 tol = 1e-6
 n_iter_max = 200
+
 
 # Store iteration results
 nmi_pose = []
@@ -128,7 +130,7 @@ print "Q: ",Q
 for v_lambda_idx in range(len(v_lambda_range)):
     # Optimization
     v_lambda = v_lambda_range[v_lambda_idx]
-    U,beta,res,mse, flag = opt_affinity_weight(affs,Q,Y,v_lambda=v_lambda,\
+    U,beta,res,mse, flag = opt_affinity_weight(affs,Q,Y,mu,v_lambda=v_lambda,\
             dim_q=dim_q,tol=tol,n_iter_max=n_iter_max)
 
     if flag == True:
