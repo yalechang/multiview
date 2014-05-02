@@ -66,7 +66,8 @@ def opt_affinity_weight(affs,Q,Y,mu,v_lambda=100.,dim_q=4,tol=1e-6,\
     #print "Q: ",Q 
     # Compute kernel matrix for existing solution
     aff_Y = v_lambda*Y.dot(Y.T)
-
+    #H = np.eye(n_instances)-1./n_instances*np.ones((n_instances,n_instances))
+    #aff_Y = H.dot(aff_Y).dot(H)
     # Random initialization of beta and U
     U = np.random.rand(n_instances,dim_q)
     beta = np.ones((n_sources,1))*1./n_sources

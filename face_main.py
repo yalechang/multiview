@@ -66,7 +66,7 @@ if flag_normalization == True:
     aff_pca = aff_pca/la.norm(aff_pca)
 
 # Centering kernel matrix
-flag_centering = True
+flag_centering = False
 H = np.eye(img.shape[0])-1./img.shape[0]*np.ones((img.shape[0],img.shape[0]))
 if flag_centering == True:
     aff_raw = H.dot(aff_raw).dot(H)
@@ -98,11 +98,11 @@ for i in range(n_instances):
     Y[i,img_identity[i]] = 1
 
 ################################ Parameter Settings ##########################
-affs = [aff_raw,aff_pca,aff_lbp,aff_hog,aff_gabor,aff_fft]
-#affs = [aff_gabor,aff_fft]
-v_lambda_range = np.arange(0,0.2,0.02)
+#affs = [aff_raw,aff_pca,aff_lbp,aff_hog,aff_gabor,aff_fft]
+affs = [aff_pca,aff_lbp]
+v_lambda_range = np.arange(0,10,1)
 # Upper bound for 1-norm of beta
-mu = 100.
+mu = 1.
 dim_q = 4
 tol = 1e-6
 n_iter_max = 200
@@ -176,6 +176,7 @@ for v_lambda_idx in range(len(v_lambda_range)):
 
 beta_vec = np.array(beta_vec)
 
+print nmi_pose
 # Plot the result
 #plt.figure(0)
 #plt.plot(nmi_pose,mse_vec)
