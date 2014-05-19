@@ -95,6 +95,7 @@ for i in range(n_sources):
         Q[j,i] = Q[i,j]
 print "Q: ",Q
 
+"""
 # Iterations
 for v_lambda_idx in range(len(v_lambda_range)):
     # Optimization
@@ -145,4 +146,4 @@ plt.ylabel("Inertia Value")
 plt.show()
 
 print nmi_univ[-1],inertia_vec[-1]
-
+"""
